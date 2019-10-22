@@ -18,52 +18,13 @@
       <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Machine App Testing</a>
+          <a class="navbar-brand" href="#">VSU Websocket Example</a>
         </div>
       </div>
     </nav>
 
     <div class="container">
       <div class="content">
-        <form action="#">
-          <div class="form-group">
-            <label for="machine-id">Machine to interact with:</label>
-            <select class="form-control" id="machine-id"> </select>
-          </div>
-
-          <div class="form-group">
-            <label for="basic-url">Job Number</label>
-            <div class="job-number">
-              <input type="text" class="form-control" id="job-number" value="AM1234PA" aria-describedby="job-number" />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="file-type">File Type:</label>
-            <div class="input-group">
-              <span class="input-group-addon">
-                <input type="checkbox" id="auto-populate" checked /> Auto Populate Data
-              </span>
-              <select class="form-control" id="file-type" onchange="fileTypeSelected()">
-                <option value="mme-v2">MME V2.20</option>
-                <option value="mme-v3">MME V3.12</option>
-                <option value="bvx">BXV</option>
-                <option value="mdf">MDF</option>
-                <option value="trn">TRN</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="file-contents">File contents here:</label>
-            <textarea class="form-control" rows="5" id="file-contents"></textarea>
-          </div>
-
-          <div class="form-group">
-            <button class="btn btn-default" id="delete-button" type="button" onclick="deleteFile()">Delete</button>
-            <button class="btn btn-default" id="send-button" type="button" onclick="createFile()">Send</button>
-          </div>
-        </form>
       </div>
     </div>
 
@@ -74,6 +35,7 @@
       crossorigin="anonymous"
     ></script>
     
+    <script src="socket.io/socket.io.js"></script>
     <script src="js/client.js"></script>
   </body>
 </html>
