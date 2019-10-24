@@ -18,41 +18,46 @@ const sampleMessages = [
 
 // var ws = new WebSocket.Server({ server: http });
 
-// ws.on('connection', (ws) => {
-//   console.log(ws);
+// ws.on('connection', (connection) => {
+//   console.log('connected');
+
+//   connection.onmessage = (e) => {
+//     console.log(e.data);
+//   }
 // })
+
 
 
 http.listen(3010, function() {
   console.log('listening on *:3000');
 });
-io.on('connection', socket => {
-  console.log('socket connected');
 
-  // socket.on('fetch', () => {
-  //   io.emit('old-messages', sampleMessages);
-  // });
+io.on('connection', (socket) => {
 
-  // socket.on('user', data => {
-  //   console.log(`user identified as ${data}`)
-  //   socket.join(data);
-  // });
-
-  // socket.on('private', data => {
-  //   console.log(`private chat to user ${data.userId} from user ${data.from}`);
-  //   io.to(data.userId).emit('chat-message', data.message);
-  // });
+  socket.emit('connections', Object.keys(io.sockets.connected).length);
 
   socket.on('disconnect', () => {
-    // if (socket.customData && socket.customData.name) {
-    //   socket.leave(socket.customData.name);
-
-    //   io.in(socket.customData.name).clients((err, clients) => {
-    //     console.log(`sockets remaining in ${socket.customData.name}: ${clients}`);
-    //     if (clients.length === 0) {
-    //       io.emit('remove-machine', socket.customData.name);
-    //     }
-    //   });
-    // }
+      console.log("A user disconnected");
   });
+
+  socket.on('chat-message', (data) => {
+      socket.broadcast.emit('chat-message', (data));
+  });
+
+  socket.on('typing', (data) => {
+      socket.broadcast.emit('typing', (data));
+  });
+
+  socket.on('stopTyping', () => {
+      socket.broadcast.emit('stopTyping');
+  });
+
+  socket.on('joined', (data) => {
+      socket.broadcast.emit('joined', (data));
+  });
+
+  socket.on('leave', (data) => {
+      socket.broadcast.emit('leave', (data));
+  });
+
 });
