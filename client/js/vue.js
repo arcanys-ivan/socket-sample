@@ -1,6 +1,6 @@
 
   // Client side Socket.IO object
-  var socket = io();
+  var socket = io('http://localhost:3000');
   
   // Creating a new Vue Instance
   let vue = new Vue({
@@ -17,8 +17,12 @@
           ready: false,
           info: [],
           connections: 0,
+          privateMessage: null,
+          privateUserId: null,
+          myUser: null
       },
       
+     
       
       // Our vue created method
       created() {
@@ -28,6 +32,18 @@
               socket.emit('leave', this.username);
           }
           
+          socket.on('private-message', (data) => {
+              console.log(data);
+          });
+
+          socket.on('test-socket', (data) => {
+              console.log(data)
+          })
+
+          socket.on('test-order', (data) => {
+            console.log(data)
+        })
+
           // Listening to chat-message event emitted from the server and pushing to messages array
           socket.on('chat-message', (data) => {
               this.messages.push({
@@ -102,14 +118,32 @@
 
               socket.emit('chat-message', {
                   message: this.newMessage,
-                  user: this.username
+                  user: this.username,
               });
               this.newMessage = null;
+          },
+
+          private(message, user) {
+            console.log('client::private', message, user);
+            this.privateUserId = user;
+            socket.emit('private', {
+                userId: user,
+                currentUser: this.username
+            });
+          },
+    
+          sendPrivate() {
+              socket.emit('private-chat', {
+                  message: this.privateMessage,
+                  userId: this.privateUserId,
+                  currentUser: this.username
+              });
           },
 
           // The addUser method emit a 'joined' event with the username and set the 'ready' property to true.
           addUser() {
               this.ready = true;
+              
               socket.emit('joined', this.username)
           }
       },
