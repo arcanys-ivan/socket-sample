@@ -1,5 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const serviceKeyAuthorization = require('../middlewares/service-key-authorization');
+
+router.use(serviceKeyAuthorization);
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
