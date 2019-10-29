@@ -31,12 +31,23 @@
           window.onbeforeunload = () => {
               socket.emit('leave', this.username);
           }
+
+          socket.on('error', function(err) {
+            throw new Error(err);
+          });
+          
+          // Connection succeeded
+          socket.on('success', function(data) {
+            console.log(data.message);
+            console.log('user info: ' + data.user);
+            console.log('logged in: ' + data.user.logged_in)
+          })
           
           socket.on('private-message', (data) => {
               console.log(data);
           });
 
-          socket.on('test-socket', (data) => {
+          socket.on('products', (data) => {
               console.log(data)
           })
 
@@ -92,6 +103,7 @@
 
             // Listening to 'connections' event emitted from the server to get the total number of connected clients
           socket.on('connections', (data) => {
+            console.log(data)
               this.connections = data;
           });
       },

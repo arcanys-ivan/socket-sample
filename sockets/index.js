@@ -1,9 +1,21 @@
+
+var jwtAuth = require('socketio-jwt-auth');
+
 module.exports = function(io) {
   const users = [];
 
+  // io.sockets
+  // .on('connection', jwtAuth.authorize({
+  //   secret: process.env.JWT_SECRET,
+  //   timeout: 15000 // 15 seconds to send the authentication message
+  // })).on('authenticated', function(socket) {
+  //   //this socket is authenticated, we are good to handle more events from it.
+  //   console.log('hello! ' + socket.decoded_token.name);
+  // });
 
   io.on('connection', (socket) => {
-
+ // in socket.io 1.0
+ console.log('hello! ', socket.decoded_token.name);
     socket.emit('connections', Object.keys(io.sockets.connected).length);
 
     socket.on('test-socket', (data) => {

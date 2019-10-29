@@ -7,14 +7,30 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
+var jwtAuth = require('socketio-jwt-auth');
 
-const indexRouter = require('./routes/index');
+const productsRouter = require('./routes/products');
 const usersRouter = require('./routes/users');
 
 const app = express();
 
 const SocketServer = require('socket.io')
 const io = new SocketServer();
+
+io.use(
+  jwtAuth.authenticate({
+    secret: process.env.JWT_SECRET,
+    algorithm: 'HS256',
+    handshake: true
+  }, (payload, done) => {
+    if (!payload) {
+      return done({error: 'unauthorize'});
+    }
+
+    return done(null, {data: 'test'});
+  })
+);
+
 app.set('io', io);
 
 // view engine setup
@@ -32,9 +48,8 @@ app.use(express.static(path.join(__dirname, 'client')));
 // initialize my socketio module and pass it io instance
 require('./sockets/index')(io);
 
-app.use('/sockets', indexRouter);
+app.use('/products', productsRouter);
 app.use('/users', usersRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

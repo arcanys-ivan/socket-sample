@@ -1,18 +1,22 @@
 const express = require('express');
 const router = express.Router();
+
 const serviceKeyAuthorization = require('../middlewares/service-key-authorization');
+const eventCheker = require('../middlewares/event-checker');
 
 router.use(serviceKeyAuthorization);
+router.use(eventCheker);
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
   const io = req.app.get('io');
 
-  // res.render('index', { title: 'Express' });
-  Object.keys(io.sockets.connected).forEach(id => {
-    const socket = io.sockets.connected[id];
+  const { eventName, data, user } = req.body;
 
-    socket.emit('test-socket', {test: true});
+  io.emit('products', {
+    eventName,
+    data,
+    user
   });
 
   res.status(200).send({
